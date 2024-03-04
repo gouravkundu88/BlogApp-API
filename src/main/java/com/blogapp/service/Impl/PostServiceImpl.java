@@ -1,6 +1,7 @@
 package com.blogapp.service.Impl;
 
 import com.blogapp.entity.Post;
+import com.blogapp.exception.ResourceNotFound;
 import com.blogapp.payload.ListPostDto;
 import com.blogapp.payload.PostDto;
 import com.blogapp.repository.PostRepository;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +47,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePost(long id) {
         postRepository.deleteById(id);
+    }
+
+    public PostDto getPostById(long id){
+        Post post = postRepository.findById(id).orElseThrow(
+                ()->new ResourceNotFound("Post Not Found with id:"+id)
+        );
+        return mapToDto(post);
     }
 
     @Override

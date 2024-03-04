@@ -1,6 +1,7 @@
 package com.blogapp.controller;
 
 import com.blogapp.payload.CommentDto;
+import com.blogapp.payload.PostDto;
 import com.blogapp.payload.PostWithCommentDto;
 import com.blogapp.service.CommentService;
 import lombok.AllArgsConstructor;
@@ -31,5 +32,11 @@ public class CommentController {
         PostWithCommentDto allCommentsByPostId = commentService.getAllCommentsByPostId(postId);
         return new ResponseEntity<>(allCommentsByPostId, HttpStatus.OK);
 
+    }
+    //http://localhost:8080/api/comments?id=1
+    @GetMapping()
+    public ResponseEntity<CommentDto>findCommentById(@RequestParam("id") long id){
+        CommentDto commentById = commentService.findCommentById(id);
+        return new ResponseEntity<>(commentById,HttpStatus.OK);
     }
 }
