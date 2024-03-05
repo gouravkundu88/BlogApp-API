@@ -20,9 +20,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> globalExceptionHandler(Exception e, WebRequest webRequest){
+    public ResponseEntity<ErrorDetails> globalExceptionHandler(Exception e, WebRequest webRequest){
         ErrorDetails error = new ErrorDetails(new Date(), e.getMessage(), webRequest.getDescription(true));//true will give partial url and client url also
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
