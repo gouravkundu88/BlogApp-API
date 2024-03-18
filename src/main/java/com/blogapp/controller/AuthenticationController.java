@@ -1,5 +1,6 @@
 package com.blogapp.controller;
 
+import com.blogapp.config.SecurityConfig;
 import com.blogapp.entity.User;
 import com.blogapp.payload.LoginDto;
 import com.blogapp.payload.Signup;
@@ -7,6 +8,11 @@ import com.blogapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -43,6 +51,10 @@ public class AuthenticationController {
     }
     @PostMapping("/sign-in")
     public ResponseEntity<String> signIn(@RequestBody LoginDto loginDto){
-        return null;
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(),loginDto.getPassword());
+        Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        return new ResponseEntity<>("Sign-in Sucessful", HttpStatus.OK);
     }
 }
